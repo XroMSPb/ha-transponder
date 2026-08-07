@@ -1,0 +1,47 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "ЗСД Транспондер",
+        "description": "Введите данные для входа в личный кабинет cabinet.nch-spb.com.",
+        "data": {
+          "username": "Имя пользователя (логин)",
+          "password": "Пароль"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Повторная авторизация ЗСД",
+        "description": "Введите новый пароль для {username}.",
+        "data": {
+          "password": "Пароль"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Неверный логин или пароль.",
+      "cannot_connect": "Не удалось подключиться к личному кабинету.",
+      "unknown": "Непредвиденная ошибка."
+    },
+    "abort": {
+      "already_configured": "Этот аккаунт уже добавлен.",
+      "reauth_successful": "Авторизация обновлена."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Настройки ЗСД",
+        "data": {
+          "scan_interval": "Интервал опроса (минуты)"
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "balance": {
+        "name": "Баланс"
+      }
+    }
+  }
+}

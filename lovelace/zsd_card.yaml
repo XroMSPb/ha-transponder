@@ -1,0 +1,49 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# ЗСД balance card for Home Assistant (Lovelace)
+#
+# Replace `sensor.zsd_balance` below with your real entity id. After adding the
+# integration, find it under Settings → Devices & Services → ЗСД, or in
+# Developer Tools → States (it looks like `sensor.zsd_1234567_kt001_balans`).
+#
+# Two options are provided: a native Markdown card (closest to the ЛК look),
+# and a plain Entities card. Use whichever you like.
+# ─────────────────────────────────────────────────────────────────────────────
+
+# ── Option 1: Markdown card (recommended, no extra installs) ──────────────────
+type: markdown
+title: Магистраль Северной Столицы (ЗСД)
+content: >-
+  {% set s = 'sensor.zsd_balance' %}
+
+  | | |
+
+  |---|---:|
+
+  | **Договор** | {{ state_attr(s, 'contract') }} |
+
+  | **Статус** | {{ state_attr(s, 'status') }} |
+
+
+  # {{ states(s) }} ₽
+
+
+  <sub>актуально на: {{ state_attr(s, 'updated_at') }}</sub>
+
+# ── Option 2: Entities card ──────────────────────────────────────────────────
+# type: entities
+# title: ЗСД Транспондер
+# entities:
+#   - entity: sensor.zsd_balance
+#     name: Баланс
+#   - type: attribute
+#     entity: sensor.zsd_balance
+#     attribute: contract
+#     name: Договор
+#   - type: attribute
+#     entity: sensor.zsd_balance
+#     attribute: status
+#     name: Статус
+#   - type: attribute
+#     entity: sensor.zsd_balance
+#     attribute: updated_at
+#     name: Актуально на
