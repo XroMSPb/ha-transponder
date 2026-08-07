@@ -2,15 +2,22 @@
   "config": {
     "step": {
       "user": {
-        "title": "ЗСД Транспондер",
-        "description": "Введите данные для входа в личный кабинет cabinet.nch-spb.com.",
+        "title": "Транспондер",
+        "description": "Выберите оператора платных дорог.",
         "data": {
-          "username": "Имя пользователя (логин)",
+          "provider": "Оператор"
+        }
+      },
+      "credentials": {
+        "title": "Вход · {provider}",
+        "description": "Введите данные для входа в личный кабинет.",
+        "data": {
+          "username": "Логин (email / телефон)",
           "password": "Пароль"
         }
       },
       "reauth_confirm": {
-        "title": "Повторная авторизация ЗСД",
+        "title": "Повторная авторизация · {provider}",
         "description": "Введите новый пароль для {username}.",
         "data": {
           "password": "Пароль"
@@ -30,7 +37,7 @@
   "options": {
     "step": {
       "init": {
-        "title": "Настройки ЗСД",
+        "title": "Настройки",
         "data": {
           "scan_interval": "Интервал опроса (минуты)"
         }
@@ -41,6 +48,9 @@
     "sensor": {
       "balance": {
         "name": "Баланс"
+      },
+      "bonus": {
+        "name": "Бонусные баллы"
       }
     }
   }

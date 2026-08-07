@@ -2,15 +2,22 @@
   "config": {
     "step": {
       "user": {
-        "title": "ZSD Transponder",
-        "description": "Enter your cabinet.nch-spb.com personal account credentials.",
+        "title": "Transponder",
+        "description": "Choose the toll-road operator.",
         "data": {
-          "username": "Username (login)",
+          "provider": "Operator"
+        }
+      },
+      "credentials": {
+        "title": "Sign in · {provider}",
+        "description": "Enter your personal account credentials.",
+        "data": {
+          "username": "Login (email / phone)",
           "password": "Password"
         }
       },
       "reauth_confirm": {
-        "title": "Re-authenticate ZSD",
+        "title": "Re-authenticate · {provider}",
         "description": "Enter a new password for {username}.",
         "data": {
           "password": "Password"
@@ -18,7 +25,7 @@
       }
     },
     "error": {
-      "invalid_auth": "Invalid username or password.",
+      "invalid_auth": "Invalid login or password.",
       "cannot_connect": "Failed to connect to the personal account.",
       "unknown": "Unexpected error."
     },
@@ -30,7 +37,7 @@
   "options": {
     "step": {
       "init": {
-        "title": "ZSD settings",
+        "title": "Settings",
         "data": {
           "scan_interval": "Polling interval (minutes)"
         }
@@ -41,6 +48,9 @@
     "sensor": {
       "balance": {
         "name": "Balance"
+      },
+      "bonus": {
+        "name": "Bonus points"
       }
     }
   }

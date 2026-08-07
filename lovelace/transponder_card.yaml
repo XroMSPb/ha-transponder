@@ -1,0 +1,48 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Карточка баланса транспондера для Home Assistant (Lovelace)
+#
+# Замените entity id на свой. После добавления интеграции найдите его в
+# Настройки → Устройства и службы → Транспондер, либо в
+# Инструменты разработчика → Состояния (вид: sensor.transponder_..._balans).
+# ─────────────────────────────────────────────────────────────────────────────
+
+# ── Markdown-карточка (ближе всего к виду ЛК) ────────────────────────────────
+type: markdown
+title: Баланс транспондера
+content: >-
+  {% set s = 'sensor.transponder_balance' %}
+
+  | | |
+
+  |---|---:|
+
+  | **Договор** | {{ state_attr(s, 'contract') }} |
+
+  | **Статус** | {{ state_attr(s, 'status') }} |
+
+
+  # {{ states(s) }} ₽
+
+
+  <sub>актуально на: {{ state_attr(s, 'updated_at') }}</sub>
+
+# ── Карточка «Сущности» (баланс + бонусы Автодора) ───────────────────────────
+# type: entities
+# title: Транспондер
+# entities:
+#   - entity: sensor.transponder_balance
+#     name: Баланс
+#   - entity: sensor.transponder_bonus_points   # только Автодор
+#     name: Бонусные баллы
+#   - type: attribute
+#     entity: sensor.transponder_balance
+#     attribute: contract
+#     name: Договор
+#   - type: attribute
+#     entity: sensor.transponder_balance
+#     attribute: status
+#     name: Статус
+#   - type: attribute
+#     entity: sensor.transponder_balance
+#     attribute: updated_at
+#     name: Актуально на
