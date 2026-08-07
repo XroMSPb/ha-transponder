@@ -106,6 +106,12 @@
 См. [`lovelace/transponder_card.yaml`](lovelace/transponder_card.yaml). Замените
 `sensor.transponder_balance` на реальный `entity_id`.
 
+Дополнительно — [`lovelace/mushroom_badge.yaml`](lovelace/mushroom_badge.yaml):
+компактный [Mushroom](https://github.com/piitaya/lovelace-mushroom)-бейдж с
+балансом и цветом иконки по порогам (зелёный / оранжевый / красный). Требует
+установленных карт Mushroom. Учтите: цвет иконки у бейджа задаётся свойством
+`color` (не `icon_color`), а условия в `if/elif` идут по возрастанию.
+
 ---
 
 ## Проверка перед установкой

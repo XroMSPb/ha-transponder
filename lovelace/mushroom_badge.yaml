@@ -1,0 +1,34 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Mushroom-бейдж с балансом транспондера и цветом по порогам.
+#
+# Требует установленных карт Mushroom (HACS → Mushroom). Свойство `color`
+# у mushroom-template-badge появилось вместе с поддержкой бейджей в HA 2024.8+.
+#
+# ВАЖНО: цвет иконки у БЕЙДЖА задаётся свойством `color`, а не `icon_color`
+# (последнее — только для mushroom-template-card). Условия в if/elif должны
+# идти по возрастанию.
+#
+# Замените entity id на свой (Инструменты разработчика → Состояния):
+#   единая интеграция — sensor.transponder_..._balance
+#   старый компонент  — sensor.zsd_1234567_kt001_balance
+# ─────────────────────────────────────────────────────────────────────────────
+
+type: custom:mushroom-template-badge
+entity: sensor.transponder_balance
+icon: mdi:car-arrow-right
+content: Kuga · {{ states('sensor.transponder_balance') }} ₽
+color: >-
+  {% set b = states('sensor.transponder_balance') | float(0) %}
+  {% if b < 100 %} red
+  {% elif b < 500 %} orange
+  {% else %} green
+  {% endif %}
+tap_action:
+  action: none
+hold_action:
+  action: more-info
+
+# Пороги (меняйте под себя, всегда по возрастанию):
+#   < 100 ₽  — красный (мало)
+#   < 500 ₽  — оранжевый
+#   иначе    — зелёный
