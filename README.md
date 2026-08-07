@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="icons/logo.png" width="128" alt="ЗСД / Автодор Транспондер" />
+</p>
+
 # ЗСД / Автодор Транспондер для Home Assistant
 
 [![hacs_badge](https://img.shields.io/badge/HACS-Custom-41BDF5.svg)](https://github.com/hacs/integration)
@@ -122,6 +126,17 @@ python tools/test_login.py --username ВАШ_ЛОГИН
 и Автодор. Сам кабинет указывает, что данные о балансе носят справочный характер.
 Используйте на свой риск: разметка или процесс входа на сайте могут измениться и
 сломать парсинг.
+
+---
+
+## Иконка
+
+Иконка (`icons/`) — оригинальная графика, сгенерирована скриптом
+[`tools/make_icon.py`](tools/make_icon.py). Чтобы иконка отображалась в самом
+Home Assistant, файлы `icon.png` (256×256) и `icon@2x.png` (512×512) нужно
+отправить PR'ом в репозиторий
+[home-assistant/brands](https://github.com/home-assistant/brands) в каталог
+`custom_integrations/zsd_transponder/`.
 
 ---
 
