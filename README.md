@@ -1,9 +1,9 @@
 # ЗСД / Автодор Транспондер для Home Assistant
 
 [![hacs_badge](https://img.shields.io/badge/HACS-Custom-41BDF5.svg)](https://github.com/hacs/integration)
-[![GitHub Release](https://img.shields.io/github/release/yourname/ha-transponder.svg)](https://github.com/yourname/ha-transponder/releases)
-[![License](https://img.shields.io/github/license/yourname/ha-transponder.svg)](LICENSE)
-[![Project Maintenance](https://img.shields.io/badge/maintained-yes-green.svg)](https://github.com/yourname/ha-transponder)
+[![GitHub Release](https://img.shields.io/github/release/XroMSPb/ha-transponder.svg)](https://github.com/XroMSPb/ha-transponder/releases)
+[![License](https://img.shields.io/github/license/XroMSPb/ha-transponder.svg)](LICENSE)
+[![Project Maintenance](https://img.shields.io/badge/maintained-yes-green.svg)](https://github.com/XroMSPb/ha-transponder)
 
 Пользовательская интеграция для Home Assistant, которая показывает баланс личного
 кабинета транспондеров платных дорог в виде сенсоров.
@@ -52,7 +52,7 @@
 2. Добавьте URL этого репозитория, категория — **Integration**.
 3. Установите **ЗСД Транспондер** и перезапустите Home Assistant.
 
-[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=yourname&repository=ha-transponder&category=integration)
+[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=XroMSPb&repository=ha-transponder&category=integration)
 
 ### Вручную
 

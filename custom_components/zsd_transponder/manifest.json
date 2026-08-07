@@ -1,12 +1,12 @@
 {
   "domain": "zsd_transponder",
   "name": "ЗСД Транспондер (Магистраль Северной Столицы)",
-  "codeowners": [],
+  "codeowners": ["@XroMSPb"],
   "config_flow": true,
-  "documentation": "https://github.com/yourname/ha-transponder",
+  "documentation": "https://github.com/XroMSPb/ha-transponder",
   "integration_type": "service",
   "iot_class": "cloud_polling",
-  "issue_tracker": "https://github.com/yourname/ha-transponder/issues",
+  "issue_tracker": "https://github.com/XroMSPb/ha-transponder/issues",
   "requirements": [],
   "version": "0.1.0"
 }
