@@ -22,6 +22,11 @@ PROVIDERS: dict[str, str] = {
 DEFAULT_SCAN_INTERVAL = timedelta(minutes=30)
 MIN_SCAN_INTERVAL_MINUTES = 5
 
+# When an update fails, poll faster for a while before falling back to the
+# configured interval: RETRY_SCAN_INTERVAL × MAX_FAST_RETRIES ≈ 15 minutes.
+RETRY_SCAN_INTERVAL = timedelta(minutes=3)
+MAX_FAST_RETRIES = 5
+
 CURRENCY_RUB = "RUB"
 
 # Attribute keys exposed on sensors.
