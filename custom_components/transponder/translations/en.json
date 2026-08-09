@@ -39,7 +39,13 @@
       "init": {
         "title": "Settings",
         "data": {
-          "scan_interval": "Polling interval (minutes)"
+          "scan_interval": "Polling interval (minutes)",
+          "retry_interval": "Retry interval on failure (minutes)",
+          "max_retries": "Number of fast retries (0 to disable)"
+        },
+        "data_description": {
+          "retry_interval": "How often to poll after a failed update.",
+          "max_retries": "How many times to poll in fast mode before falling back to the normal interval."
         }
       }
     }

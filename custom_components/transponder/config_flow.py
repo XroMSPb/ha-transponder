@@ -14,11 +14,16 @@ from homeassistant.helpers.aiohttp_client import async_create_clientsession
 
 from .api import get_client, TransponderAuthError, TransponderConnectionError
 from .const import (
+    CONF_MAX_RETRIES,
     CONF_PROVIDER,
+    CONF_RETRY_INTERVAL,
     CONF_SCAN_INTERVAL,
     DEFAULT_HEADERS,
+    DEFAULT_RETRY_INTERVAL_MINUTES,
     DEFAULT_SCAN_INTERVAL,
     DOMAIN,
+    MAX_FAST_RETRIES,
+    MIN_RETRY_INTERVAL_MINUTES,
     MIN_SCAN_INTERVAL_MINUTES,
     PROVIDERS,
 )
@@ -163,14 +168,27 @@ class TransponderOptionsFlow(OptionsFlow):
         if user_input is not None:
             return self.async_create_entry(data=user_input)
 
-        current = self.config_entry.options.get(
+        options = self.config_entry.options
+        current_scan = options.get(
             CONF_SCAN_INTERVAL, int(DEFAULT_SCAN_INTERVAL.total_seconds() // 60)
         )
+        current_retry = options.get(
+            CONF_RETRY_INTERVAL, DEFAULT_RETRY_INTERVAL_MINUTES
+        )
+        current_max_retries = options.get(CONF_MAX_RETRIES, MAX_FAST_RETRIES)
         schema = vol.Schema(
             {
-                vol.Optional(CONF_SCAN_INTERVAL, default=current): vol.All(
+                vol.Optional(CONF_SCAN_INTERVAL, default=current_scan): vol.All(
                     vol.Coerce(int), vol.Range(min=MIN_SCAN_INTERVAL_MINUTES)
-                )
+                ),
+                vol.Optional(
+                    CONF_RETRY_INTERVAL, default=current_retry
+                ): vol.All(
+                    vol.Coerce(int), vol.Range(min=MIN_RETRY_INTERVAL_MINUTES)
+                ),
+                vol.Optional(
+                    CONF_MAX_RETRIES, default=current_max_retries
+                ): vol.All(vol.Coerce(int), vol.Range(min=0)),
             }
         )
         return self.async_show_form(step_id="init", data_schema=schema)
