@@ -10,6 +10,8 @@ CONF_PROVIDER = "provider"
 CONF_USERNAME = "username"
 CONF_PASSWORD = "password"
 CONF_SCAN_INTERVAL = "scan_interval"
+CONF_RETRY_INTERVAL = "retry_interval"
+CONF_MAX_RETRIES = "max_retries"
 
 PROVIDER_ZSD = "zsd"
 PROVIDER_AVTODOR = "avtodor"
@@ -24,8 +26,11 @@ MIN_SCAN_INTERVAL_MINUTES = 5
 
 # When an update fails, poll faster for a while before falling back to the
 # configured interval: RETRY_SCAN_INTERVAL × MAX_FAST_RETRIES ≈ 15 minutes.
+# Both are defaults; the user can override them in the options flow.
 RETRY_SCAN_INTERVAL = timedelta(minutes=3)
 MAX_FAST_RETRIES = 5
+DEFAULT_RETRY_INTERVAL_MINUTES = int(RETRY_SCAN_INTERVAL.total_seconds() // 60)
+MIN_RETRY_INTERVAL_MINUTES = 1
 
 CURRENCY_RUB = "RUB"
 

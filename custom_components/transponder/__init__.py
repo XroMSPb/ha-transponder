@@ -7,7 +7,15 @@ from datetime import timedelta
 from homeassistant.const import CONF_PASSWORD, CONF_USERNAME, Platform
 from homeassistant.core import HomeAssistant
 
-from .const import CONF_PROVIDER, CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL
+from .const import (
+    CONF_MAX_RETRIES,
+    CONF_PROVIDER,
+    CONF_RETRY_INTERVAL,
+    CONF_SCAN_INTERVAL,
+    DEFAULT_SCAN_INTERVAL,
+    MAX_FAST_RETRIES,
+    RETRY_SCAN_INTERVAL,
+)
 from .coordinator import TransponderConfigEntry, TransponderCoordinator
 
 PLATFORMS: list[Platform] = [Platform.SENSOR]
@@ -22,6 +30,13 @@ async def async_setup_entry(
         timedelta(minutes=scan_minutes) if scan_minutes else DEFAULT_SCAN_INTERVAL
     )
 
+    retry_minutes = entry.options.get(CONF_RETRY_INTERVAL)
+    retry_interval = (
+        timedelta(minutes=retry_minutes) if retry_minutes else RETRY_SCAN_INTERVAL
+    )
+
+    max_retries = entry.options.get(CONF_MAX_RETRIES, MAX_FAST_RETRIES)
+
     coordinator = TransponderCoordinator(
         hass,
         entry,
@@ -29,6 +44,8 @@ async def async_setup_entry(
         username=entry.data[CONF_USERNAME],
         password=entry.data[CONF_PASSWORD],
         scan_interval=scan_interval,
+        retry_interval=retry_interval,
+        max_retries=max_retries,
     )
     await coordinator.async_config_entry_first_refresh()
 
