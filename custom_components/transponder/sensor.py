@@ -18,6 +18,7 @@ from .const import (
     ATTR_CONTRACT,
     ATTR_PROVIDER,
     ATTR_STATUS,
+    ATTR_TOPUP_URL,
     ATTR_TRANSPONDERS,
     ATTR_UPDATED_AT,
     DOMAIN,
@@ -107,7 +108,7 @@ class TransponderBalanceSensor(_BaseAccountSensor):
         account = self._account
         if account is None:
             return {}
-        return {
+        attrs: dict[str, str | int | None] = {
             ATTR_PROVIDER: account.provider,
             ATTR_CONTRACT: account.contract,
             ATTR_ACCOUNT: account.extra.get("account") or account.account_id,
@@ -115,6 +116,9 @@ class TransponderBalanceSensor(_BaseAccountSensor):
             ATTR_TRANSPONDERS: account.transponders_count,
             ATTR_UPDATED_AT: account.updated_at,
         }
+        if account.topup_url:
+            attrs[ATTR_TOPUP_URL] = account.topup_url
+        return attrs
 
 
 class TransponderBonusSensor(_BaseAccountSensor):

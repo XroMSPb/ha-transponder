@@ -36,6 +36,7 @@ class Account:
     updated_at: str | None = None
     bonus_points: float | None = None
     transponders_count: int | None = None
+    topup_url: str | None = None
     extra: dict[str, str] = field(default_factory=dict)
 
     @property

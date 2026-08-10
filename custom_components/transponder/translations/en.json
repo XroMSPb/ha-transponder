@@ -58,6 +58,11 @@
       "bonus": {
         "name": "Bonus points"
       }
+    },
+    "button": {
+      "refresh": {
+        "name": "Refresh"
+      }
     }
   }
 }

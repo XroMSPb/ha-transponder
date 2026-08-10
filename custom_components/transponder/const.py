@@ -41,6 +41,7 @@ ATTR_ACCOUNT = "account"
 ATTR_STATUS = "status"
 ATTR_UPDATED_AT = "updated_at"
 ATTR_TRANSPONDERS = "transponders"
+ATTR_TOPUP_URL = "topup_url"
 
 # A browser-like UA – the Автодор site sits behind DDoS-Guard.
 USER_AGENT = (

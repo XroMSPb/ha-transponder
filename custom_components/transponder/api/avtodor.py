@@ -32,6 +32,7 @@ _LOGGER = logging.getLogger(__name__)
 BASE_URL = "https://lk.avtodor-tr.ru"
 START_URL = f"{BASE_URL}/"
 EXTENDED_URL = f"{BASE_URL}/api/client/extended"
+PAYMENT_LINK_URL = f"{BASE_URL}/api/internal/payment_link"
 STATUS_DICT_URL = (
     f"{BASE_URL}/api/public/dictionaries/all?dictionary_name=contract_statuses"
 )
@@ -116,7 +117,25 @@ class AvtodorClient(TransponderClient):
             raise TransponderConnectionError(str(err)) from err
 
         status_map = await self._async_status_map()
-        return self._build_accounts(data, status_map)
+        accounts = self._build_accounts(data, status_map)
+
+        topup_url = await self._async_payment_link()
+        if topup_url:
+            for account in accounts:
+                account.topup_url = topup_url
+        return accounts
+
+    async def _async_payment_link(self) -> str | None:
+        """Best-effort fetch of the card top-up URL (non-fatal on failure)."""
+        try:
+            async with self._session.get(PAYMENT_LINK_URL) as resp:
+                if resp.status != 200:
+                    return None
+                payload = await resp.json(content_type=None)
+        except (aiohttp.ClientError, ValueError):
+            return None
+        url = payload.get("url") if isinstance(payload, dict) else None
+        return url or None
 
     async def _async_status_map(self) -> dict[int, str]:
         if self._status_map is not None:

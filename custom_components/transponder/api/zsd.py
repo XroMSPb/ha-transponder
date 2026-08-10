@@ -9,6 +9,7 @@ The Onyma cabinet has no public API, so this replicates the browser flow:
 
 from __future__ import annotations
 
+import html as html_lib
 import json
 import logging
 import re
@@ -37,6 +38,10 @@ _ROW_RE = re.compile(
 )
 _CONTRACT_RE = re.compile(r'<li class="dog-info[^"]*">(?P<block>.*?)</li>', re.DOTALL)
 _TAG_RE = re.compile(r"<[^>]+>")
+# The "Пополнить" (top-up) anchor inside the balance-link cell.
+_TOPUP_RE = re.compile(
+    r'balance-link[^>]*>\s*<a[^>]+href="([^"]+)"', re.DOTALL
+)
 
 _CONTRACT_LABELS = ("Договор", "Contract")
 _STATUS_LABELS = ("Статус", "Status")
@@ -83,8 +88,15 @@ def parse_balance_fragment(html: str) -> list[dict]:
 
         if not contract and balance is None and status is None:
             continue
+        topup_match = _TOPUP_RE.search(block)
+        topup_url = html_lib.unescape(topup_match.group(1)) if topup_match else None
         results.append(
-            {"contract": contract or "unknown", "balance": balance, "status": status}
+            {
+                "contract": contract or "unknown",
+                "balance": balance,
+                "status": status,
+                "topup_url": topup_url,
+            }
         )
     return results
 
@@ -168,6 +180,7 @@ class ZsdClient(TransponderClient):
                 contract=row["contract"],
                 status=row["status"],
                 updated_at=date,
+                topup_url=row.get("topup_url"),
             )
             for row in parsed
         ]
