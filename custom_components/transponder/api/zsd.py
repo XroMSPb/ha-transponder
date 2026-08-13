@@ -151,9 +151,18 @@ class ZsdClient(TransponderClient):
         try:
             html, date = await self._async_rpc_balance()
         except TransponderAuthError:
+            # Session expired: re-login, then retry the RPC once.
             self._logged_in = False
             await self.async_login()
-            html, date = await self._async_rpc_balance()
+            try:
+                html, date = await self._async_rpc_balance()
+            except TransponderAuthError as err:
+                # Login succeeded (it raises on bad credentials), so a repeat
+                # failure here is a transient server problem, not a wrong
+                # password. Retry later rather than forcing reauth.
+                raise TransponderConnectionError(
+                    f"ЗСД session not accepted after re-login: {err}"
+                ) from err
 
         parsed = parse_balance_fragment(html)
         if not parsed:
