@@ -45,6 +45,19 @@ _ANY_FORM_ACTION_RE = re.compile(
     r'<form[^>]*\baction="([^"]+)"[^>]*>', re.IGNORECASE
 )
 
+# Markers Keycloak renders on the login page when the credentials themselves
+# were rejected. If we land back on the login page WITHOUT any of these, the
+# re-render is almost certainly transient (expired form, anti-bot challenge,
+# rate limiting, server hiccup) and must NOT be treated as a bad password –
+# otherwise the user is nagged to re-enter credentials that are actually fine.
+_CREDENTIAL_ERROR_MARKERS = (
+    'id="input-error"',
+    "kc-feedback-text",
+    "alert-error",
+    "pf-m-danger",
+    "pf-m-error",
+)
+
 
 class AvtodorClient(TransponderClient):
     """Client for the Автодор Keycloak-backed cabinet."""
@@ -90,12 +103,23 @@ class AvtodorClient(TransponderClient):
                 allow_redirects=True,
             ) as resp:
                 final_url = str(resp.url)
+                result_page = await resp.text()
         except aiohttp.ClientError as err:
             raise TransponderConnectionError(f"Автодор login failed: {err}") from err
 
-        # Still on the auth host → Keycloak re-rendered the login page with an error.
-        if AUTH_HOST in final_url:
+        # Redirected off the auth host → login succeeded.
+        if AUTH_HOST not in final_url:
+            return
+
+        # Still on the auth host: distinguish a rejected password from a
+        # transient re-render. Only a page that actually shows a credential
+        # error means the user must re-authenticate.
+        if self._page_shows_credential_error(result_page):
             raise TransponderAuthError("Invalid Автодор login or password")
+        raise TransponderConnectionError(
+            "Автодор login did not complete (no credential error shown); "
+            "treating as transient and will retry"
+        )
 
     async def _async_fetch_extended(self) -> dict:
         async with self._session.get(EXTENDED_URL, allow_redirects=False) as resp:
@@ -111,8 +135,18 @@ class AvtodorClient(TransponderClient):
         try:
             data = await self._async_fetch_extended()
         except TransponderAuthError:
+            # Session expired: log in again, then retry the fetch once.
             await self.async_login()
-            data = await self._async_fetch_extended()
+            try:
+                data = await self._async_fetch_extended()
+            except TransponderAuthError as err:
+                # Login itself succeeded (it would have raised otherwise), yet
+                # the fresh session still isn't accepted. That's a transient
+                # server-side problem, not bad credentials – retry later
+                # instead of forcing the user through reauth.
+                raise TransponderConnectionError(
+                    f"Автодор session not accepted after re-login: {err}"
+                ) from err
         except aiohttp.ClientError as err:
             raise TransponderConnectionError(str(err)) from err
 
@@ -188,6 +222,12 @@ class AvtodorClient(TransponderClient):
         if not match:
             return None
         return html_lib.unescape(match.group(1))
+
+    @staticmethod
+    def _page_shows_credential_error(page: str) -> bool:
+        """True only if Keycloak rendered a real credential-rejection error."""
+        lowered = page.lower()
+        return any(marker in lowered for marker in _CREDENTIAL_ERROR_MARKERS)
 
 
 def _to_float(value) -> float | None:
